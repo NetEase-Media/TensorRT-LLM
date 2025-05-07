@@ -857,11 +857,12 @@ def convert_hf_qwen(hf_model,
         post_ln_weight = get_weight(model_params, prefix + key_list[6], dtype)
         weights[tllm_prex + 'post_layernorm.weight'] = post_ln_weight
 
-        q_ln_weight = get_weight(model_params, prefix + key_list[9], dtype)
-        weights[tllm_prex + 'attention.q_layernorm.weight'] = q_ln_weight
+        if qwen_type == 'qwen3':
+            q_ln_weight = get_weight(model_params, prefix + key_list[9], dtype)
+            weights[tllm_prex + 'attention.q_layernorm.weight'] = q_ln_weight
 
-        k_ln_weight = get_weight(model_params, prefix + key_list[10], dtype)
-        weights[tllm_prex + 'attention.k_layernorm.weight'] = k_ln_weight
+            k_ln_weight = get_weight(model_params, prefix + key_list[10], dtype)
+            weights[tllm_prex + 'attention.k_layernorm.weight'] = k_ln_weight
 
     v = get_weight(model_params, key_list[7], dtype)
 
