@@ -101,7 +101,7 @@ class QWenConfig(PretrainedConfig):
             qwen_type = f'{hf_config.model_type}_llava_onevision'
 
         valid_types = ('qwen', 'qwen2', 'qwen2_moe', 'qwen2_llava_onevision',
-                       'qwen2_vl')
+                       'qwen2_vl', 'qwen3')
         assert qwen_type in valid_types, f"Unsupported Qwen type: {qwen_type}, only {valid_types} are acceptable."
         num_key_value_heads = getattr(hf_config, "num_key_value_heads",
                                       hf_config.num_attention_heads)
@@ -122,6 +122,11 @@ class QWenConfig(PretrainedConfig):
         else:
             rms_norm_eps = hf_config.rms_norm_eps
             rotary_base = getattr(hf_config, "rope_theta", 100000.0)
+
+        qk_layernorm = None
+        if qwen_type == 'qwen3':
+            attn_bias = getattr(hf_config, 'attention_bias')
+            qk_layernorm = True
 
         num_labels = 1
         if hf_config.architectures[0] == "Qwen2ForSequenceClassification":
@@ -182,4 +187,5 @@ class QWenConfig(PretrainedConfig):
             quantization=quant_config,
             num_labels=num_labels,
             tie_word_embeddings=tie_word_embeddings,
+            qk_layernorm=qk_layernorm,
             **kwargs)

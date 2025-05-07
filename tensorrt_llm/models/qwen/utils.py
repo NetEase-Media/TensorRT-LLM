@@ -108,9 +108,24 @@ def get_qwen_key_list(qwen_type):
         "model.embed_tokens",  # vocabulary embedding
         "model.norm",  # final layer norm
     ]
+    qwen3_key_list = [
+        "self_attn.",  # attention.qkv
+        "self_attn.o_proj",  # attention.dense
+        "mlp.up_proj",  # mlp.gate
+        "mlp.gate_proj",  # mlp.fc
+        "mlp.down_proj",  # mlp.proj
+        "input_layernorm",  # input_layernorm
+        "post_attention_layernorm",  # post_layernorm
+        "model.embed_tokens",  # vocabulary embedding
+        "model.norm",  # final layer norm
+        "self_attn.q_norm",  # attention q norm
+        "self_attn.k_norm",  # attention k norm
+    ]
     key_list = []
     if qwen_type == 'qwen':
         key_list.extend(qwen_key_list)
+    elif qwen_type == 'qwen3':
+        key_list.extend(qwen3_key_list)
     else:
         key_list.extend(qwen2_key_list)
     return key_list

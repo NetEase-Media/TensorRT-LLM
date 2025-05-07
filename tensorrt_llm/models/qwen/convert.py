@@ -857,6 +857,12 @@ def convert_hf_qwen(hf_model,
         post_ln_weight = get_weight(model_params, prefix + key_list[6], dtype)
         weights[tllm_prex + 'post_layernorm.weight'] = post_ln_weight
 
+        q_ln_weight = get_weight(model_params, prefix + key_list[9], dtype)
+        weights[tllm_prex + 'attention.q_layernorm.weight'] = q_ln_weight
+
+        k_ln_weight = get_weight(model_params, prefix + key_list[10], dtype)
+        weights[tllm_prex + 'attention.k_layernorm.weight'] = k_ln_weight
+
     v = get_weight(model_params, key_list[7], dtype)
 
     if mapping.is_last_pp_rank():
@@ -937,7 +943,7 @@ def quantize(hf_model_dir: str,
                                               trust_remote_code=True,
                                               use_fast=False,
                                               padding_side='left')
-    dataset = load_calib_dataset(calib_dataset)
+    dataset = load_calib_dataset(calib_dataset, trust_remote_code=True)
 
     system_prompt = "You are a useful assistant, please directly output the corresponding summary according to the article entered by the user."
     gen_config_path = os.path.join(hf_model_dir, 'generation_config.json')
