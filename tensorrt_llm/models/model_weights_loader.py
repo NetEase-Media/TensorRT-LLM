@@ -390,4 +390,8 @@ class ModelWeightsLoader:
             tllm_weights.update(
                 self.load(tllm_key,
                           custom_postprocess_kwargs=custom_postprocess_kwargs))
+        for k, v in tllm_weights.items():
+            logger.debug(f'name: {k}, shape: {v.shape}, dtype: {v.dtype}')
+        for k, v in self.model.named_parameters():
+            logger.debug(f'param name: {k}, shape: {v.shape}, dtype: {v.dtype}')
         self.fill(tllm_weights)
